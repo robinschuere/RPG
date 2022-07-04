@@ -4,25 +4,24 @@ A small RPG project made with PEWNS.
 
 ## PEWNS
 So you heard of MEAN and MERN.
-Now I present you the PEWNS stack.
+Now I present you the PENS stack.
 
 That's right:
 
-- Postgres
+- PostgreSQL
 - ExpressJS
-- Node
-- Websockets
+- NodeJs
 - SolidJs
 
 ## DEV Setup
 
 ### Setting up Docker, Postgres and DBeaver
 
-If you already have the files below, feel free to skip this part.
+If you already have the applications below (or you simply wish to use something else), feel free to skip this part.
 
 Install [Docker](https://docs.docker.com/get-docker/).
 
-Install [DBeaver](https://dbeaver.io/download/)
+Install [DBeaver](https://dbeaver.io/download/),
 
 After the installation, download the docker image of postgres and create a database.
 
@@ -78,7 +77,7 @@ OR
 yarn dev
 ```
 
-### Frontend matters
+### Setup the frontend
 
 ```
 cd ./frontend
