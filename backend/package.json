@@ -4,7 +4,7 @@
   "description": "",
   "license": "ISC",
   "scripts": {
-    "format": "prettier --write \"*/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"*/**/*.ts\" --fix",
     "start": "ts-node src/server.ts",
     "dev": "nodemon src/server.ts",

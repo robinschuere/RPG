@@ -5,7 +5,6 @@ import { EventHandlerProps } from './types';
 const locationStore = getEntity('locations');
 const characterStateStore = getEntity('character_states');
 const locationDirectionStore = getEntity('location_directions');
-const locationMonsterStore = getEntity('location_monsters');
 
 export const characterNavigates = async ({
   existingState,
@@ -45,11 +44,6 @@ export const characterNavigates = async ({
         },
       ),
     );
-
-    const locationMonsters = await locationMonsterStore
-      .getTable()
-      .where({ locationId: values.locationId })
-      .select();
 
     console.debug('NAVIGATING TO A NEW LOCATION', values.locationId);
     await characterStateStore.update(existingState.id, {

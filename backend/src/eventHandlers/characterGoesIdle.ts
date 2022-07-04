@@ -6,8 +6,6 @@ import { LocationDirection } from '../../../shared/types/LocationDirection';
 const characterStateStore = getEntity('character_states');
 const locationStore = getEntity('locations');
 const locationDirectionStore = getEntity('location_directions');
-const locationMonsterStore = getEntity('location_monsters');
-const locationShopStore = getEntity('location_shops');
 
 export const characterGoesIdle = async ({
   existingState,
