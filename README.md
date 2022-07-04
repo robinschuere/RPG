@@ -1,8 +1,8 @@
 # RPG
 
-A small RPG project made with PEWNS.
+A small RPG project made with PENS.
 
-## PEWNS
+## PENS
 So you heard of MEAN and MERN.
 Now I present you the PENS stack.
 
