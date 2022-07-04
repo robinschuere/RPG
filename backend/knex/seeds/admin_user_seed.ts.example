@@ -1,0 +1,55 @@
+import { Knex } from 'knex';
+import { encryptPassword } from 'src/helpers/encryptionHelper';
+import { v4 as uuid } from 'uuid';
+
+const userId = uuid();
+const characterId = uuid();
+
+// this is the password that is going to be encrypted. For the sake of being a bit more secure, change this value!
+const PASSWORD = 'admin123';
+
+const populateUsers = async (knex: Knex): Promise<void> => {
+  const password = await encryptPassword(PASSWORD);
+  const users = [
+    {
+      id: userId,
+      email: 'admin@somedevilishdomain.com',
+      firstname: 'Alfred',
+      lastname: 'Dministrator',
+      roleId: 9001,
+      password,
+      verified: true,
+      sentVerificationEmail: true,
+    },
+  ];
+  return knex.batchInsert('users', users);
+};
+
+const populateCharacters = async (knex: Knex): Promise<void> => {
+  const characters = [
+    {
+      id: characterId,
+      userId,
+      name: 'Den Alfred',
+      genderId: 1,
+      raceId: 1,
+      level: 1,
+      health: 1,
+      strength: 1,
+      defence: 1,
+      wisdom: 1,
+      dexterity: 1,
+      intelligence: 1,
+      accuracy: 1,
+      speed: 1,
+      luck: 1,
+      professionIds: [1],
+    },
+  ];
+  return knex.batchInsert('characters', characters);
+};
+
+export async function seed(knex: Knex): Promise<void> {
+  await populateUsers(knex);
+  await populateCharacters(knex);
+}

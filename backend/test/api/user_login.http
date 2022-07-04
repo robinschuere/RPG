@@ -1,0 +1,17 @@
+@base = http://localhost:8000
+@Credentials = YWRtaW5AcmFwcHMuY29tOkBkbWluMQ==
+
+@Authorization = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHJhcHBzLmNvbSIsInJvbGUiOjkwMDEsImV4cCI6MTY1NDI0ODY4MSwiaWF0IjoxNjU0MjQ1MDgxfQ.fJ4UtS4_4dc3Cmyw65JujQuydhcF8mXYWvA7yq2_aqs
+
+POST {{base}}/login HTTP/1.1
+content-type: application/json
+
+{
+    "credentials": "{{Credentials}}"
+}
+
+###
+
+GET {{base}}/logout HTTP/1.1
+content-type: application/json
+Authorization: {{Authorization}}

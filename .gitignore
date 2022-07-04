@@ -1,0 +1,20 @@
+# compiled output
+.env
+node_modules
+dist
+
+# OS
+.DS_Store
+
+# IDEs and editors
+*.launch
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# This is the seedfile which we will use to create an admin user. This way you can already login.
+admin_user_seed.ts

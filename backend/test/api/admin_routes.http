@@ -1,0 +1,49 @@
+@base = http://localhost:8000
+
+@Authorization = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0NGRjMDE3Yy01MDVmLTRiZWYtOTNjMy1mNzFmNzhjYzJhODIiLCJlbWFpbCI6ImFkbWluQHJhcHBzLmNvbSIsInJvbGUiOjkwMDEsImV4cCI6MTY1NDc3NzM2NiwiaWF0IjoxNjU0NzczNzY2fQ.agBzDKILBSWPhWYCB9esjCIQziJvGK9tCz9hrIdX4x8
+@Route = roles
+
+@id = 1
+
+###
+
+OPTIONS {{base}} HTTP/1.1
+Content-Type: application/json
+
+### 
+GET {{base}}/admin/{{Route}} HTTP/1.1
+content-type: application/json
+Authorization: {{Authorization}}
+
+### 
+POST {{base}}/admin/{{Route}} HTTP/1.1
+content-type: application/json
+Authorization: {{Authorization}}
+
+{
+  "data": {
+    "id": {{id}},
+    "name": "moderator"
+  }
+}
+
+### 
+GET {{base}}/admin/{{Route}}/{{id}} HTTP/1.1
+content-type: application/json
+Authorization: {{Authorization}}
+
+### 
+PUT {{base}}/admin/{{Route}}/{{id}} HTTP/1.1
+content-type: application/json
+Authorization: {{Authorization}}
+
+{
+  "data": {
+    "name": "moderator"
+  }
+}
+
+### 
+DELETE {{base}}/admin/{{Route}}/{{id}} HTTP/1.1
+content-type: application/json
+Authorization: {{Authorization}}
