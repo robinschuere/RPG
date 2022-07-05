@@ -1,0 +1,12 @@
+export const directions = {
+  NORTH: "NORTH",
+  NORTHEAST: "NORTHEAST",
+  EAST: "EAST",
+  SOUTHEAST: "SOUTHEAST",
+  SOUTH: "SOUTH",
+  SOUTHWEST: "SOUTHWEST",
+  WEST: "WEST",
+  NORTHWEST: "NORTHWEST",
+  UP: "UP",
+  DOWN: "DOWN",
+};

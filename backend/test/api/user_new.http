@@ -1,0 +1,42 @@
+@base = http://localhost:8000
+
+@Credentials = cm9iaW4uc2NodWVyZUBnbWFpbC5jb206dGVzdDEyMw==
+###
+POST {{base}}/register
+Content-Type: application/json
+
+{
+  "user": {
+    "firstname": "Robin",
+    "lastname": "Schuerewegen"
+  },
+  "credentials": "{{Credentials}}"
+}
+
+###
+
+@verifiedToken = 3833a837-2ebc-4cf3-8d77-b8169c1e1e40
+
+POST {{base}}/verify
+content-type: application/json
+
+{
+  "verifiedToken": "{{verifiedToken}}"
+}
+
+###
+
+POST {{base}}/login HTTP/1.1
+content-type: application/json
+
+{
+    "credentials": "{{Credentials}}"
+}
+
+###
+
+@Authorization = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJvYmluLnNjaHVlcmVAZ21haWwuY29tIiwicm9sZSI6MCwiZXhwIjoxNjU0MjUxNDI0LCJpYXQiOjE2NTQyNDc4MjR9.lA0o8TBBrTasu_izvO6ImqlQ0dw3w0yMbZgFHL9wxas
+
+GET {{base}}/logout HTTP/1.1
+content-type: application/json
+Authorization: {{Authorization}}
