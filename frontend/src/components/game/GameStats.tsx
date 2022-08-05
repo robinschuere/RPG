@@ -6,26 +6,13 @@ import {
   Row,
   Stack,
 } from 'solid-bootstrap';
-import { createEffect, createResource, createSignal } from 'solid-js';
+import { createEffect, createSignal } from 'solid-js';
 import { stageTypes } from '../../../../shared/constants';
 import { Character } from '../../../../shared/types/Character';
 import { CombatStatistics } from '../../../../shared/types/CharacterState';
-import { Race } from '../../../../shared/types/Race';
-import { Gender } from '../../../../shared/types/Gender';
 import { StateStore, useState } from '../../providers/StateProvider';
-import { getGameEntityById } from '../../services/rpgApi';
 import NameValueColumn from '../NameValueColumn';
 import StatisticColumn from '../StatisticColumn';
-
-const fetchRace = async (raceId: number): Promise<Race> => {
-  const { data } = await getGameEntityById('races', raceId);
-  return data as Race;
-};
-
-const fetchGender = async (genderId: number): Promise<Gender> => {
-  const { data } = await getGameEntityById('genders', genderId);
-  return data as Gender;
-};
 
 const GameStats = () => {
   const [state, { sendAction }] = useState() as StateStore;
@@ -40,10 +27,6 @@ const GameStats = () => {
     speed: 0,
     luck: 0,
   });
-  const [race] = createResource(
-    () => state.characterState?.character?.raceId,
-    fetchRace,
-  );
 
   createEffect(() => {
     if (
@@ -63,11 +46,6 @@ const GameStats = () => {
       });
     }
   });
-
-  const [gender] = createResource(
-    () => state.characterState?.character?.genderId,
-    fetchGender,
-  );
 
   const getCharacter = () => {
     const character = state.characterState?.character as Character;
@@ -208,8 +186,16 @@ const GameStats = () => {
           <NameValueColumn name="NAME" value={getCharacter().name} sm={12} />
         </Row>
         <Row>
-          <NameValueColumn name="Race" value={race()?.name} sm={6} />
-          <NameValueColumn name="Gender" value={gender()?.name} sm={6} />
+          <NameValueColumn
+            name="Race"
+            value={getCharacter()?.race?.name}
+            sm={6}
+          />
+          <NameValueColumn
+            name="Gender"
+            value={getCharacter().gender?.name}
+            sm={6}
+          />
         </Row>
         <Row>
           <Col xs={6} style={{ border: '1px solid grey' }} />
@@ -254,6 +240,15 @@ const GameStats = () => {
               <ProgressBar now={getExpProgress()} variant={getExpVariant()} />
             </Col>
           </Col>
+        </Row>
+        <Row>
+          <NameValueColumn
+            name="Professions"
+            value={getCharacter()
+              .professions?.map((profession) => profession.name)
+              .join(', ')}
+            sm={12}
+          />
         </Row>
         <Row>
           <NameValueColumn

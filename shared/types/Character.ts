@@ -2,6 +2,7 @@ import { Profession } from './Profession';
 import { Race } from './Race';
 import { Gender } from './Gender';
 import { User } from './User';
+import { Traits } from './Traits';
 
 export interface Character {
   id: string;
@@ -12,15 +13,7 @@ export interface Character {
   level: number;
   experience: number;
   totalExperience: number;
-  health: number;
-  strength: number;
-  defence: number;
-  wisdom: number;
-  dexterity: number;
-  intelligence: number;
-  accuracy: number;
-  speed: number;
-  luck: number;
+  traits: Traits;
   points: number;
   professionIds: number[];
 }
@@ -30,4 +23,11 @@ export interface Character {
   gender?: Gender;
   race?: Race;
   professions?: Profession[];
+}
+
+export interface NewCharacterProps {
+  name: string;
+  raceId: number;
+  genderId: number;
+  traits: Traits;
 }

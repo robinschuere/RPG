@@ -13,12 +13,15 @@ import {
   sendVerificationEmail,
 } from '../services/mailService';
 import config from '../../config';
+import { stores } from '../helpers/entityHelper';
+import { Character } from '../../../shared/types/Character';
 
 interface User {
   firstname: string;
   lastname: string;
   email: string;
   verified: boolean;
+  admin: boolean;
 }
 
 const mapFrom = (user: any): User => {
@@ -27,13 +30,14 @@ const mapFrom = (user: any): User => {
     lastname: user.lastname,
     email: user.email,
     verified: !user.verificationToken,
+    admin: user.roleId === 9001,
   };
 };
 
 const mapTo = (user: User): any => {
   return {
     firstname: user.firstname,
-    lastname: user.lastname,
+    lastname: user.lastname, 
   };
 };
 
@@ -56,6 +60,7 @@ export const login = async (req, res) => {
       .update({ ...result, token, recoveryToken: null });
     return res.json({ token });
   }
+  return res.status(401).json({ message: 'user does not exist' });
 };
 
 export const alive = async (req, res) => {
@@ -80,6 +85,13 @@ export const register = async (req, res) => {
   }
   const hash = await encryptPassword(password);
 
+  const userToCreate = {
+    ...user,
+    email,
+    password: hash,
+    roleId: 1,
+  };
+
   if (config.app.withVerification) {
     const verificationToken = uuid();
     const sentVerificationEmail = await sendVerificationEmail(
@@ -88,22 +100,16 @@ export const register = async (req, res) => {
     );
 
     await database('users').insert({
-      ...user,
-      email,
-      password: hash,
+      ...userToCreate,
       verificationToken,
-      roleId: 0,
       sentVerificationEmail,
     });
 
     return res.send('OK');
   } else {
     await database('users').insert({
-      ...user,
-      email,
-      password: hash,
+      ...userToCreate,
       verificationToken: null,
-      roleId: 0,
       verified: true,
       sentVerificationEmail: true,
     });
@@ -121,8 +127,8 @@ export const verify = async (req, res) => {
     .select();
   if (!result) {
     return res
-      .status(400)
-      .json({ message: 'Verification token does not exist' });
+      .status(401)
+      .json({ message: 'Verification token does not exist.' });
   }
   const match = await comparePassword(password, result.password);
   if (!match) {
@@ -215,17 +221,17 @@ export const remember = async (req, res, _next) => {
     .select();
   if (!result) {
     return res.status(401).json({
-      message: 'Verification token does not exist',
+      message: 'User does not exist.',
     });
   }
 
   const { verified } = await checkForgotToken(verificationToken);
-  if (verified) {
-    return res.status(400).json({
+  if (!verified) {
+    return res.status(401).json({
       message: 'Link expired',
     });
   }
-  const hash = encryptPassword(password);
+  const hash = await encryptPassword(password);
 
   await database('users')
     .where({ verificationToken })
@@ -236,4 +242,72 @@ export const remember = async (req, res, _next) => {
     });
 
   return res.send('OK');
+};
+
+export const getAmountOfCreatableCharacters = async (req, res, _next) => {
+  const { userId } = req.headers;
+  const characterCount = await stores.characterStore
+    .getTable()
+    .where({ userId })
+    .count()
+    .first()
+    .select();
+  const toCreate = config.game.maxAmountOfCharacters - characterCount.count;
+  return res.json({
+    amount: toCreate,
+    startingPoints: config.game.levelStart,
+  });
+};
+
+export const createNewCharacter = async (req, res, _next) => {
+  const { userId } = req.headers;
+  const { character } = req.body;
+
+  const characterCount = await stores.characterStore
+    .getTable()
+    .where({ userId })
+    .count()
+    .first()
+    .select();
+  const canCreate =
+    config.game.maxAmountOfCharacters - characterCount.count > 0;
+  if (!canCreate) {
+    return res.status(401).json({ message: 'Max amount of users reached' });
+  }
+
+  let amountOfPoints = 0;
+  Object.values(character.traits).forEach((value: number) => {
+    amountOfPoints += value || 0;
+  });
+  if (amountOfPoints > config.game.levelStart) {
+    return res
+      .status(401)
+      .json({ message: 'Max amount of trait points reached' });
+  }
+  const newCharacter: Character = {
+    userId,
+    id: uuid(),
+    level: 1,
+    experience: 0,
+    totalExperience: 0,
+    name: character.name,
+    raceId: character.raceId,
+    genderId: character.genderId,
+    traits: {
+      health: character.traits.health || 0,
+      strength: character.traits.strength || 0,
+      defence: character.traits.defence || 0,
+      wisdom: character.traits.wisdom || 0,
+      dexterity: character.traits.dexterity || 0,
+      intelligence: character.traits.intelligence || 0,
+      accuracy: character.traits.accuracy || 0,
+      speed: character.traits.speed || 0,
+      luck: character.traits.luck || 0,
+    },
+    points: config.game.levelStart - amountOfPoints,
+    professionIds: [],
+  };
+
+  const [created] = await stores.characterStore.insert(newCharacter);
+  return res.json({ character: created });
 };

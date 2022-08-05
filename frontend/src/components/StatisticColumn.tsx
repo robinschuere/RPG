@@ -2,7 +2,7 @@ import { Button, Col, Row } from 'solid-bootstrap';
 
 type StatisticColumnProps = {
   name: string;
-  getPoints: () => any;
+  getPoints?: () => any;
   hasPointsToSpend?: boolean;
   onPointAdd?: (name: string) => void;
   onPointRemove?: (name: string) => void;
@@ -38,7 +38,7 @@ const StatisticColumn = (props: StatisticColumnProps) => {
     <Col style={{ border: '1px solid grey' }} {...colProps}>
       <Row>
         <Col xs={6}>{`${props.name.substring(0, 3).toUpperCase()}: ${
-          props.getCharacter()[name]
+          props.getCharacter().traits[name]
         }`}</Col>
         <Col xs={4}>
           {getPoints()[name] > 0 && onPointRemove && (

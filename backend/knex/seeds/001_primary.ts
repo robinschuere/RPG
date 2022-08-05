@@ -77,8 +77,50 @@ const populateProfessions = async (knex: Knex): Promise<void> => {
     { id: 4, name: 'Archer', fromProfessionId: 1 },
     { id: 5, name: 'Rogue', fromProfessionId: 1 },
     { id: 6, name: 'Adventurer', fromProfessionId: 1 },
-    { id: 7, name: 'Daygon', fromProfessionId: 1, extraRaise: 5 },
-    { id: 8, name: 'Stray-Hun', fromProfessionId: 7, extraRaise: 5 },
+    {
+      id: 7,
+      name: 'Daygon',
+      fromProfessionId: 1,
+      extraRaise: 5,
+      traits: { health: 15, strength: 15, defence: 15 },
+    },
+    {
+      id: 8,
+      name: 'Stray-Hun',
+      fromProfessionId: 7,
+      extraRaise: 5,
+      traits: { health: 30, strength: 25, defence: 25 },
+      extras: JSON.stringify([
+        {
+          name: 'temporaryRaiseStat',
+          gameName: 'Berserker',
+          values: {
+            turns: 5,
+            cooldown: 10,
+            traits: [
+              { strength: 50 },
+              { defence: -50, turns: 7 },
+              { wisdom: -50, turns: 7 },
+              { intelligence: -50, turns: 7 },
+            ],
+          },
+        },
+        {
+          name: 'temporaryRaiseStat',
+          gameName: 'Art of the Strayhun',
+          values: {
+            turns: 2,
+            cooldown: 5,
+            traits: [
+              { strength: 15 },
+              { defence: 15 },
+              { wisdom: 15 },
+              { intelligence: 15 },
+            ],
+          },
+        },
+      ]),
+    },
   ];
   return knex.batchInsert('professions', professions);
 };

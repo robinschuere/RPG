@@ -21,10 +21,11 @@ import { Item } from '../../../shared/types/Item';
 import { LocationMonsterItem } from '../../../shared/types/LocationMonsterItem';
 import { Monster } from '../../../shared/types/Monster';
 import { Race } from '../../../shared/types/Race';
-import { getEntity } from './entityHelper';
+import { getEntity, stores } from './entityHelper';
 import { v4 as uuid } from 'uuid';
 import { Location } from '../../../shared/types/Location';
 import { Gender } from '../../../shared/types/Gender';
+import { Profession } from '../../../shared/types/Profession';
 
 const locationStore = getEntity('locations');
 const itemStore = getEntity('items');
@@ -50,16 +51,42 @@ const defineStatistics = (
   items: Item[],
 ): StatisticValues => {
   const values: StatisticValues = {
-    HEA: entity.health || 0,
-    STR: entity.strength || 0,
-    DEF: entity.defence || 0,
-    WIS: entity.wisdom || 0,
-    DEX: entity.dexterity || 0,
-    INT: entity.intelligence || 0,
-    ACC: entity.accuracy || 0,
-    SPD: entity.speed || 0,
-    LUC: entity.luck || 0,
+    HEA: entity.traits.health || 0,
+    STR: entity.traits.strength || 0,
+    DEF: entity.traits.defence || 0,
+    WIS: entity.traits.wisdom || 0,
+    DEX: entity.traits.dexterity || 0,
+    INT: entity.traits.intelligence || 0,
+    ACC: entity.traits.accuracy || 0,
+    SPD: entity.traits.speed || 0,
+    LUC: entity.traits.luck || 0,
   };
+
+  entity.professions.forEach((profession) => {
+    values.HEA += profession?.traits['health']
+      ? profession.traits['health']
+      : 0;
+    values.STR += profession?.traits['strength']
+      ? profession.traits['strength']
+      : 0;
+    values.DEF += profession?.traits['defence']
+      ? profession.traits['defence']
+      : 0;
+    values.WIS += profession?.traits['wisdom']
+      ? profession.traits['wisdom']
+      : 0;
+    values.DEX += profession?.traits['dexterity']
+      ? profession.traits['dexterity']
+      : 0;
+    values.INT += profession?.traits['intelligence']
+      ? profession.traits['intelligence']
+      : 0;
+    values.ACC += profession?.traits['accuracy']
+      ? profession.traits['accuracy']
+      : 0;
+    values.SPD += profession?.traits['speed'] ? profession.traits['speed'] : 0;
+    values.LUC += profession?.traits['luck'] ? profession.traits['luck'] : 0;
+  });
 
   items.forEach((item) => {
     values.HEA += item?.traits['health'] ? item.traits['health'] : 0;
@@ -82,6 +109,7 @@ const getCombatStatistics = (
   name: string,
   race: Race,
   gender: Gender,
+  professions: Profession[],
   experience: number,
   weapon?: Item,
 ): CombatStatistics => {
@@ -108,6 +136,7 @@ const getCombatStatistics = (
     accuracy: statistics.ACC,
     speed: statistics.SPD,
     experience,
+    professionAdvantages: professions.filter((s) => s.raceId),
   };
 
   return combatStatistics;
@@ -131,6 +160,11 @@ export const defineCharacterStatistics = async (
   )) as Character;
   const characterRace: Race = await raceStore.getById(character.raceId);
   const characterGender: Gender = await genderStore.getById(character.genderId);
+  const professions: Profession[] = await Promise.all(
+    character.professionIds.map((professionId) =>
+      stores.professionStore.getById(professionId),
+    ),
+  );
 
   const wornItems = [];
   Object.keys(slotTypes).forEach((key) => {
@@ -141,16 +175,20 @@ export const defineCharacterStatistics = async (
   });
   const items: Item[] = await Promise.all(wornItems.map(itemStore.getById));
 
-  const characterStatistics = defineStatistics(character, items);
+  const characterStatistics = defineStatistics(
+    { ...character, professions },
+    items,
+  );
 
   const weaponId: number = characterState.gear[slotTypes.WEAPON_HAND];
   const weapon = items.find((item: Item) => item.id === weaponId);
 
-  const statistics: CombatStatistics = getCombatStatistics(
+  const statistics = getCombatStatistics(
     characterStatistics,
     character.name,
     characterRace,
     characterGender,
+    professions,
     character.experience,
     weapon,
   );
@@ -169,6 +207,12 @@ export const defineMonsterStatistics = async (
   const monster: Monster = await monsterStore.getById(id);
   const monsterRace: Race = await raceStore.getById(monster.raceId);
   const monsterGender: Gender = await genderStore.getById(monster.genderId);
+  const professions: Profession[] = await Promise.all(
+    monster.professionIds.map((professionId) =>
+      stores.professionStore.getById(professionId),
+    ),
+  );
+
   const locationMonsterItems: LocationMonsterItem[] =
     await locationMonsterItemStore
       .getTable()
@@ -183,7 +227,10 @@ export const defineMonsterStatistics = async (
     ),
   );
 
-  const monsterStatistics = defineStatistics(monster, items);
+  const monsterStatistics = defineStatistics(
+    { ...monster, professions },
+    items,
+  );
 
   const locationMonsterItem = locationMonsterItems.find(
     (s) => s.slot === slotTypes.WEAPON_HAND,
@@ -197,6 +244,7 @@ export const defineMonsterStatistics = async (
     monster.name,
     monsterRace,
     monsterGender,
+    professions,
     monster.experience,
     weapon,
   );

@@ -55,7 +55,7 @@ const Screen = () => {
           .roundHistory.map(({ roundText }) => (
             <ListGroup.Item>{roundText}</ListGroup.Item>
           ))
-          .slice(0, 10)}
+          .slice(0, 7)}
       </ListGroup>
       <Row>
         <Col xs={4}>{getStageValues().characterCombatState?.name}</Col>

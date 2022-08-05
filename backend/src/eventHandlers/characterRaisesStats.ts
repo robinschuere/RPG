@@ -30,10 +30,10 @@ export const characterRaisesStats = async ({
   Object.entries(event.values.points)
     .filter((s) => s[1] > 0)
     .forEach((s) => {
-      toUpdate[s[0]] = character[s[0]] + s[1];
+      toUpdate[s[0]] = (character.traits[s[0]] || 0) + s[1];
     });
   const state = {
-    ...toUpdate,
+    traits: { ...character.traits, ...toUpdate },
     points: character.points - totalRaisedPoints,
   };
   await characterStore.update(character.id, state);

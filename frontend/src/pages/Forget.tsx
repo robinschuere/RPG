@@ -1,6 +1,8 @@
 import { Navigate } from 'solid-app-router';
+import { Alert, Button, Col, Container, Form, Row } from 'solid-bootstrap';
 import { createSignal } from 'solid-js';
-import { forget, register } from '../services/rpgApi';
+import FormLayout from '../components/FormLayout';
+import { forget, register } from '../services/meRequests';
 
 const Forget = () => {
   const [getEmail, setEmail] = createSignal('');
@@ -20,38 +22,34 @@ const Forget = () => {
   };
 
   return (
-    <>
-      {!getMessage() && (
-        <form>
-          <div>
-            <p>Forgot your password?</p>
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Email address"
+    <Container>
+      {getMessage() && (
+        <Alert variant="success" dismissible>
+          {getMessage()}
+        </Alert>
+      )}
+      {getError() && (
+        <Alert variant="danger" dismissible>
+          {getError()}
+        </Alert>
+      )}
+      <FormLayout>
+        <Form style={{ 'margin-top': '25px', 'margin-bottom': '25px' }}>
+          <h1>Forgot your password?</h1>
+          <Form.Group style={{ 'margin-top': '25px' }}>
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              placeholder="Email Address"
               value={getEmail()}
               onChange={(e) => setEmail(e.currentTarget.value)}
             />
-          </div>
-          <div>
-            <button onClick={handleSubmit} type="button">
-              Ask a new password
-            </button>
-          </div>
-        </form>
-      )}
-      {getMessage() && (
-        <div>
-          <p>{getMessage()}</p>
-        </div>
-      )}
-      {getError() && (
-        <div>
-          <p>{getError()}</p>
-        </div>
-      )}
-    </>
+          </Form.Group>
+          <Button style={{ 'margin-top': '25px' }} onClick={handleSubmit}>
+            Ask a new password
+          </Button>
+        </Form>
+      </FormLayout>
+    </Container>
   );
 };
 

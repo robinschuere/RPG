@@ -7,6 +7,7 @@ import { LocationDirection } from "./LocationDirection";
 import { Location } from "./Location";
 import { LocationShop } from "./LocationShop";
 import { Gender } from "./Gender";
+import { Profession } from "./Profession";
 
 export interface StatisticValues {
   HEA: number;
@@ -38,6 +39,7 @@ export interface CombatStatistics {
   accuracy: number;
   speed: number;
   experience: number;
+  professionAdvantages: Profession[],
 }
 
 export interface RoundValue {

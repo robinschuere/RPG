@@ -1,6 +1,9 @@
 import { For } from 'solid-js';
 import { StateStore, useState } from '../providers/StateProvider';
 import Character from '../components/Character';
+import { Col, Container, Row, Spinner } from 'solid-bootstrap';
+import GameCard from '../components/game/GameCard';
+import NewCharacter from '../components/NewCharacter';
 import { useNavigate } from 'solid-app-router';
 
 const Characters = () => {
@@ -9,20 +12,45 @@ const Characters = () => {
 
   const handlePlay = (characterId: string) => {
     sendAction({ eventType: 'loginCharacter', characterId });
-    navigate(`/characters/${characterId}`);
+  };
+
+  const handleCreateCharacter = () => {
+    navigate('/characters/new');
   };
 
   return (
-    <div>
-      <div>
-        <p>Characters</p>
-      </div>
-      <For each={state.characters}>
-        {(character: any) => (
-          <Character character={character} onClick={handlePlay} />
-        )}
-      </For>
-    </div>
+    <>
+      {state.characterState && (
+        <>
+          <Container fluid>
+            <GameCard />
+          </Container>
+        </>
+      )}
+      {!state.characterState && (
+        <Container>
+          <Row>
+            <Col class="text-center">
+              <h1>Characters</h1>
+            </Col>
+          </Row>
+          <Row>
+            <For each={state.characters}>
+              {(character: any) => (
+                <Col xs={6}>
+                  <Character character={character} onClick={handlePlay} />
+                </Col>
+              )}
+            </For>
+            {state.newCharacters.amount > 0 && (
+              <Col xs={6}>
+                <NewCharacter onClick={handleCreateCharacter} />
+              </Col>
+            )}
+          </Row>
+        </Container>
+      )}
+    </>
   );
 };
 

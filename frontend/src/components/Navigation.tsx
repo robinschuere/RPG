@@ -1,5 +1,12 @@
 import { StateStore, useState } from '../providers/StateProvider';
-import { Nav, Navbar, Container, Button } from 'solid-bootstrap';
+import {
+  Nav,
+  Navbar,
+  Container,
+  Button,
+  Spinner,
+  Tooltip,
+} from 'solid-bootstrap';
 import { useNavigate } from 'solid-app-router';
 
 const Navigation = () => {
@@ -15,8 +22,13 @@ const Navigation = () => {
     <Navbar bg="light" expand="sm" fixed="top" sticky="top">
       <Container fluid>
         <Navbar.Brand href="/">RPG</Navbar.Brand>
+        {state.isRetrying && (
+          <Spinner animation="grow" variant="danger" size="sm" role="status" />
+        )}
         {state.token && <Nav.Link href="/characters">Characters</Nav.Link>}
-        <Navbar.Toggle />
+        {state.token && state.user?.admin && (
+          <Nav.Link href={'/admin'}>Admin panel</Nav.Link>
+        )}
         <Navbar.Collapse class="justify-content-end">
           {state.token && (
             <>

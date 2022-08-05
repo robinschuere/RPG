@@ -48,6 +48,7 @@ const GameCard = () => {
           <Tab eventKey={screenTypes.INVENTORY} title="Inventory" />
           <Tab eventKey={screenTypes.GEAR} title="Gear" />
           <Tab eventKey={screenTypes.STATISTICS} title="Stats" />
+          <Tab eventKey={screenTypes.LOGOUT} title="Logout" />
         </Tabs>
       </Card.Footer>
     </Card>

@@ -19,12 +19,11 @@ const WinScreen = () => {
       {state.characterState?.stageValues && (
         <Stack gap={4}>
           <Screen />
-          <Row>
-            <Col />
-            <Col />
-            <Col />
-            <Col xs={4}>
-              <Button onClick={handleContinue}>Continue</Button>
+          <Row style={{ 'margin-top': '25px' }}>
+            <Col class="text-center">
+              <Button variant="success" size="lg" onClick={handleContinue}>
+                Continue
+              </Button>
             </Col>
           </Row>
         </Stack>

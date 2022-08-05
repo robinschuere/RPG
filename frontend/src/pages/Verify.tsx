@@ -1,6 +1,7 @@
 import { useSearchParams } from 'solid-app-router';
+import { Alert, Button, Col, Container, Form, Row } from 'solid-bootstrap';
 import { createSignal } from 'solid-js';
-import { verify } from '../services/rpgApi';
+import { verify } from '../services/meRequests';
 
 const Verify = () => {
   const [searchParams] = useSearchParams();
@@ -21,33 +22,46 @@ const Verify = () => {
   };
 
   return (
-    <>
-      {!getMessage() && (
-        <form>
-          Verify account
-          <input type="email" placeholder="email" value={searchParams.email} />
-          <input
-            type="password"
-            placeholder="Password"
-            value={getPassword()}
-            onChange={(e) => setPassword(e.currentTarget.value)}
-          />
-          <button onClick={handleSubmit} type="button">
-            Verify
-          </button>
-          {getMessage() && (
-            <div>
-              <p>{getMessage()}</p>
-            </div>
-          )}
-          {getError() && (
-            <div>
-              <p>{getError()}</p>
-            </div>
-          )}
-        </form>
+    <Container>
+      {getMessage() && (
+        <Alert variant="success" dismissible>
+          {getMessage()}
+        </Alert>
       )}
-    </>
+      {getError() && (
+        <Alert variant="danger" dismissible>
+          {getError()}
+        </Alert>
+      )}
+      <Row style={{ 'margin-top': '25px' }}>
+        <Col xs={4}></Col>
+        <Col
+          class="text-center"
+          style={{ border: '1px solid grey', 'border-radius': '25px' }}
+          xs={4}
+        >
+          <Form style={{ 'margin-top': '25px', 'margin-bottom': '25px' }}>
+            <h1>Verify account</h1>
+            <Form.Group style={{ 'margin-top': '25px' }}>
+              <Form.Label>Email</Form.Label>
+              <Form.Control value={searchParams.email} disabled />
+            </Form.Group>
+            <Form.Group style={{ 'margin-top': '25px' }}>
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type="password"
+                value={getPassword()}
+                onChange={(e) => setPassword(e.currentTarget.value)}
+              />
+            </Form.Group>
+            <Button style={{ 'margin-top': '25px' }} onClick={handleSubmit}>
+              Verify
+            </Button>
+          </Form>
+        </Col>
+        <Col xs={4}></Col>
+      </Row>
+    </Container>
   );
 };
 

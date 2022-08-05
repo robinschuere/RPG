@@ -1,6 +1,8 @@
 import { Navigate } from 'solid-app-router';
+import { Col, Container, Form, Row, Button, Alert } from 'solid-bootstrap';
 import { createSignal } from 'solid-js';
-import { register } from '../services/rpgApi';
+import FormLayout from '../components/FormLayout';
+import { forget, register } from '../services/meRequests';
 
 const Login = () => {
   const [getEmail, setEmail] = createSignal('');
@@ -20,49 +22,61 @@ const Login = () => {
     }
   };
 
-  const handleForgotPassword = (e: Event) => {
-    e.preventDefault();
+  const handleForgotPassword = async () => {
     if (getEmail()) {
-      console.log('TO BE IMPLEMENTED');
+      const { error } = await forget(getEmail());
+      if (error) {
+        setError(error.message);
+      } else {
+        setMessage('Remember password email sent. Check your email.');
+      }
     }
   };
 
   return (
-    <>
-      {!getMessage() && (
-        <form>
-          Register a new account
-          <input
-            type="text"
-            placeholder="Email address"
-            value={getEmail()}
-            onChange={(e) => setEmail(e.currentTarget.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={getPassword()}
-            onChange={(e) => setPassword(e.currentTarget.value)}
-          />
-          <button onClick={handleSubmit} type="button">
-            Register
-          </button>
-        </form>
-      )}
+    <Container>
       {getMessage() && (
-        <div>
-          <p>{getMessage()}</p>
-        </div>
+        <Alert variant="success" dismissible>
+          {getMessage()}
+        </Alert>
       )}
       {getError() && (
-        <div>
-          <p>{getError()}</p>
-          <button onClick={handleForgotPassword} type="button">
-            Forgot Password?
-          </button>
-        </div>
+        <Alert variant="danger" dismissible>
+          <Alert.Heading>{getError()}</Alert.Heading>
+          <Button
+            style={{ 'margin-top': '25px' }}
+            onClick={handleForgotPassword}
+          >
+            {' '}
+            Forgot Pasword?
+          </Button>
+        </Alert>
       )}
-    </>
+      <FormLayout>
+        <Form style={{ 'margin-top': '25px', 'margin-bottom': '25px' }}>
+          <h1>Register a new account</h1>
+          <Form.Group style={{ 'margin-top': '25px' }}>
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              placeholder="Email Address"
+              value={getEmail()}
+              onChange={(e) => setEmail(e.currentTarget.value)}
+            />
+          </Form.Group>
+          <Form.Group style={{ 'margin-top': '25px' }}>
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              value={getPassword()}
+              onChange={(e) => setPassword(e.currentTarget.value)}
+            />
+          </Form.Group>
+          <Button style={{ 'margin-top': '25px' }} onClick={handleSubmit}>
+            Register
+          </Button>
+        </Form>
+      </FormLayout>
+    </Container>
   );
 };
 

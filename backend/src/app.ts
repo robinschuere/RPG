@@ -11,6 +11,8 @@ import {
   resendVerification,
   updateUser,
   verify,
+  getAmountOfCreatableCharacters,
+  createNewCharacter,
 } from './controllers/users';
 import characterRoute from './routes/characters';
 import adminRoutes from './routes/adminRoutes';
@@ -42,6 +44,8 @@ app.get('/resendverification', resendVerification);
 app.get('/alive', alive);
 app.get('/logout', logout);
 app.get('/me', getUser);
+app.get('/me/characters', getAmountOfCreatableCharacters);
+app.post('/me/characters', createNewCharacter);
 app.post('/me', updateUser);
 app.use('/characters', characterRoute);
 app.use('/game', gameRoutes);

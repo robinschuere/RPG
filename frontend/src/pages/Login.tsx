@@ -1,8 +1,9 @@
 import { Link, useNavigate } from 'solid-app-router';
-import { Form } from 'solid-bootstrap';
+import { Alert, Button, Col, Container, Form, Row } from 'solid-bootstrap';
 import { createSignal } from 'solid-js';
+import FormLayout from '../components/FormLayout';
 import { StateStore, useState } from '../providers/StateProvider';
-import { login } from '../services/rpgApi';
+import { login } from '../services/meRequests';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -25,34 +26,54 @@ const Login = () => {
     }
   };
 
+  const handleKeyUp = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  };
+
   return (
-    <form>
-      Login
-      <input
-        type="text"
-        placeholder="Email address"
-        value={getEmail()}
-        onChange={(e) => setEmail(e.currentTarget.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={getPassword()}
-        onChange={(e) => setPassword(e.currentTarget.value)}
-      />
-      <button onClick={handleSubmit} type="button">
-        Login
-      </button>
-      <div>
-        <Link href="/forget">Forgot password?</Link>
-        <Link href="/register">Or register?</Link>
-      </div>
+    <Container>
       {getError() && (
-        <div>
-          <p>{getError()}</p>
-        </div>
+        <Alert variant="danger" dismissible>
+          {getError()}
+        </Alert>
       )}
-    </form>
+      <FormLayout>
+        <Form style={{ 'margin-top': '25px', 'margin-bottom': '25px' }}>
+          <h1>Login</h1>
+          <Form.Group style={{ 'margin-top': '25px' }}>
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              placeholder="Email Address"
+              value={getEmail()}
+              onChange={(e) => setEmail(e.currentTarget.value)}
+            />
+          </Form.Group>
+          <Form.Group style={{ 'margin-top': '25px' }}>
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              value={getPassword()}
+              onChange={(e) => setPassword(e.currentTarget.value)}
+              onKeyUp={(e) => handleKeyUp(e)}
+            />
+          </Form.Group>
+          <Button style={{ 'margin-top': '25px' }} onClick={handleSubmit}>
+            Login
+          </Button>
+          <Row style={{ 'margin-top': '25px' }}>
+            <Col>
+              <Link href="/forget">Forgot password?</Link>
+            </Col>
+            <Col>
+              <Link href="/register">Or register?</Link>
+            </Col>
+          </Row>
+        </Form>
+      </FormLayout>
+    </Container>
   );
 };
 

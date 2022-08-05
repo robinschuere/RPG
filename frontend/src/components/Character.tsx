@@ -11,7 +11,7 @@ const Character = (props: CharacterProps) => {
   // return ;
 
   return (
-    <Card class="text-center mt-4" style={{ width: '18rem' }}>
+    <Card class="text-center">
       <Card.Img variant="top"></Card.Img>
       <Card.Body>
         <Card.Title>{character.name}</Card.Title>

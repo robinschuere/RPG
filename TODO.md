@@ -1,7 +1,7 @@
 # TODO List 
 
 - [x] Rename the table sexes to genders
-- [ ] Create a character through the character page
+- [x] Create a character through the character page
   - Create a character flow
     - set a name
     - choose a gender
@@ -14,4 +14,16 @@
 - [ ] Remove the extra fetchers on the gameStats for genders and races since they should be able on the state store.
 - [ ] Define stories
 - [ ] Create admin pages to create entities
-- [ ] update the entotyHelper to return all different stores. That way we do not need to retype all this things.
+- [x] update the entityHelper to return all different stores. That way we do not need to redo the whole getEntity thing things.
+- [x] Update the traits to always be inside a jsonb column instead of different columns (characters and monsters)
+- [x] Update the professions to also contain trait raisers and an extras column
+- [x] Add professionsIds to monsters
+- [ ] Create a character logout flow
+- [ ] remove professionId column in favour of professionIds column
+- [x] straigthen up the login flow
+  - Login page with bootstrap
+  - register page with bootstrap
+  - forget page with bootstrap
+  - remember page with bootstrap
+  - correctly link the pages
+- [x] Update the logout flow so that the navigation correctly responds

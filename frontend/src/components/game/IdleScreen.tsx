@@ -54,37 +54,49 @@ const IdleScreen = () => {
           <Col />
         </Row>
       )}
-      {state.characterState?.location && state.characterState?.shops && (
-        <>
-          <Row>
-            <Col />
-            <Col class="text-center">
-              <u>Shops</u>
-            </Col>
-            <Col />
-          </Row>
-          <For each={state.characterState?.shops}>
-            {(shop: LocationShop) => {
-              return (
-                <Row>
-                  <Col />
-                  <Col>{shop.name}</Col>
-                  <Col>
-                    <Button onClick={() => handleShop(shop.id)}>
-                      Go to shop
-                    </Button>
-                  </Col>
-                </Row>
-              );
-            }}
-          </For>
-        </>
-      )}
+
       <Row>
+        <Col xs={1} />
+        <Col class="text-center">
+          <u>Directions</u>
+        </Col>
+        <Col xs={1} />
+      </Row>
+      <Row>
+        <Col xs={1} />
         <Col>
           <GameDirections />
         </Col>
+        <Col xs={1} />
       </Row>
+      {state.characterState?.location &&
+        state.characterState?.shops &&
+        state.characterState.shops.length > 0 && (
+          <>
+            <Row>
+              <Col xs={1} />
+              <Col class="text-center">
+                <u>Shops</u>
+              </Col>
+              <Col xs={1} />
+            </Row>
+            <For each={state.characterState?.shops}>
+              {(shop: LocationShop) => {
+                return (
+                  <Row>
+                    <Col xs={1} />
+                    <Col>{shop.name}</Col>
+                    <Col>
+                      <Button onClick={() => handleShop(shop.id)}>
+                        Go to shop
+                      </Button>
+                    </Col>
+                  </Row>
+                );
+              }}
+            </For>
+          </>
+        )}
     </Stack>
   );
 };

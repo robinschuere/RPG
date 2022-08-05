@@ -1,20 +1,8 @@
-import { SlotType } from "./SlotType";
+import { Traits } from "./Traits";
 
 interface ItemRequirements {
   level?: number;
   experience?: number;
-  health?: number;
-  strength?: number;
-  defence?: number;
-  wisdom?: number;
-  dexterity?: number;
-  intelligence?: number;
-  accuracy?: number;
-  speed?: number;
-  luck?: number;
-}
-
-interface ItemTraits {
   health?: number;
   strength?: number;
   defence?: number;
@@ -32,7 +20,7 @@ export interface Item {
   description: string;
   itemTypeId: number;
   requirements: ItemRequirements;
-  traits: ItemTraits;
+  traits: Traits;
   extras: any[];
   worth: number;
   slots: number[];

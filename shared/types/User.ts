@@ -12,6 +12,7 @@ export interface User {
   verificationToken: string;
   verified: boolean;
   sentVerificationEmail: boolean;
+  admin: boolean;
 }
 
 export interface User {

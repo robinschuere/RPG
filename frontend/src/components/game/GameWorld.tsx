@@ -1,9 +1,5 @@
 import { StateStore, useState } from '../../providers/StateProvider';
-import {
-  getGameEntityById,
-  getGameSubEntityByEntityById,
-} from '../../services/rpgApi';
-import { Button, Container, Row, Stack } from 'solid-bootstrap';
+import { Button, Container } from 'solid-bootstrap';
 import { stageTypes } from '../../../../shared/constants';
 import CombatScreen from './CombatScreen';
 import TrackCombatScreen from './TrackCombatScreen';

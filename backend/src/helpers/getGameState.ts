@@ -5,20 +5,11 @@ import { LocationShop } from '../../../shared/types/LocationShop';
 import { Profession } from '../../../shared/types/Profession';
 import { Race } from '../../../shared/types/Race';
 import { Gender } from '../../../shared/types/Gender';
-import { getEntity } from './entityHelper';
+import { stores } from './entityHelper';
 import { defineNextLevelExperience } from './raiseHelpers';
 
-const characterStore = getEntity('characters');
-const locationStore = getEntity('locations');
-const locationShopStore = getEntity('location_shops');
-const locationMonsterStore = getEntity('location_monsters');
-const characterStateStore = getEntity('character_states');
-const raceStore = getEntity('races');
-const genderStore = getEntity('genders');
-const professionStore = getEntity('professions');
-
 const getCharacterState = async (characterId: string) => {
-  const currentState = await characterStateStore
+  const currentState = await stores.characterStateStore
     .getTable()
     .where({ characterId })
     .first()
@@ -35,23 +26,25 @@ export const getGameState = async (
   characterId: string,
 ): Promise<CharacterState> => {
   const characterState: CharacterState = await getCharacterState(characterId);
-  const character: Character = await characterStore.getById(characterId);
-  const location: Location = await locationStore.getById(
+  const character: Character = await stores.characterStore.getById(characterId);
+  const location: Location = await stores.locationStore.getById(
     characterState.locationId,
   );
-  const locationMonsters = await locationMonsterStore
+  const locationMonsters = await stores.locationMonsterStore
     .getTable()
     .where({ locationId: characterState.locationId })
-    .count();
-  const shops: LocationShop[] = await locationShopStore
+    .count()
+    .first()
+    .select();
+  const shops: LocationShop[] = await stores.locationShopStore
     .getTable()
     .where({ locationId: characterState.locationId })
     .select();
-  const gender: Gender = await genderStore.getById(character.genderId);
-  const race: Race = await raceStore.getById(character.raceId);
+  const gender: Gender = await stores.genderStore.getById(character.genderId);
+  const race: Race = await stores.raceStore.getById(character.raceId);
   const professions: Profession[] = await Promise.all(
     character.professionIds.map((professionId) =>
-      professionStore.getById(professionId),
+      stores.professionStore.getById(professionId),
     ),
   );
 
@@ -65,7 +58,7 @@ export const getGameState = async (
     },
     location,
     nextLevelExperience: defineNextLevelExperience(character.level),
-    hasMonsters: locationMonsters > 0,
+    hasMonsters: locationMonsters.count > 0,
     shops,
   };
   return gameState;

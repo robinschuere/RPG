@@ -39,3 +39,23 @@ export const getEntity = (name: string): Entity => {
     remove,
   };
 };
+
+export const stores = {
+  characterStateStore: getEntity('character_states'),
+  characterStore: getEntity('characters'),
+  itemStore: getEntity('items'),
+  locationStore: getEntity('locations'),
+  locationMonsterStore: getEntity('location_monsters'),
+  locationDirectionStore: getEntity('location_directions'),
+  locationShopStore: getEntity('location_shops'),
+  locationResourceStore: getEntity('location_resources'),
+  monsterStore: getEntity('monsters'),
+  genderStore: getEntity('genders'),
+  raceStore: getEntity('races'),
+  roleStore: getEntity('roles'),
+  professionStore: getEntity('professions'),
+  regionStore: getEntity('regions'),
+  locationMonsterItemStore: getEntity('location_monster_items'),
+  locationMonsterDropStore: getEntity('location_monster_drops'),
+  itemTypeStore: getEntity('item_types'),
+};

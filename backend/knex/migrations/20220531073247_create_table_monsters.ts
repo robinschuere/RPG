@@ -132,24 +132,13 @@ const createTableMonsters = (knex: Knex): Promise<void> => {
     table.string('name').notNullable();
     table.integer('raceId').notNullable().references('id').inTable('races');
     table.integer('genderId').notNullable().references('id').inTable('genders');
-    table
-      .integer('professionId')
-      .notNullable()
-      .references('id')
-      .inTable('professions');
     table.text('description').notNullable().defaultTo('');
     table.integer('experience').notNullable().defaultTo(1);
     // characteristics
     table.integer('level').notNullable().defaultTo(0);
-    table.integer('health').notNullable().defaultTo(0);
-    table.integer('strength').notNullable().defaultTo(0);
-    table.integer('defence').notNullable().defaultTo(0);
-    table.integer('wisdom').notNullable().defaultTo(0);
-    table.integer('dexterity').notNullable().defaultTo(0);
-    table.integer('intelligence').notNullable().defaultTo(0);
-    table.integer('accuracy').notNullable().defaultTo(0);
-    table.integer('speed').notNullable().defaultTo(0);
-    table.integer('luck').notNullable().defaultTo(0);
+    // traits
+    table.jsonb('traits').notNullable().defaultTo('{}');
+    table.specificType('professionIds', 'INT[]').notNullable();
   });
 };
 
@@ -229,6 +218,10 @@ const createTableProfessions = (knex: Knex): Promise<void> => {
       .nullable();
     table.text('description').notNullable().defaultTo('');
     table.integer('extraRaise').notNullable().defaultTo(0);
+    table.jsonb('traits').notNullable().defaultTo('{}');
+    table.jsonb('extras').notNullable().defaultTo('[]');
+    table.integer('raceId').references('id').inTable('races').nullable();
+    table.jsonb('professionAdvantages').notNullable().defaultTo('[]');
   });
 };
 
@@ -318,22 +311,13 @@ const createTableCharacters = (knex: Knex): Promise<void> => {
     table.string('name').notNullable();
     table.integer('genderId').references('id').inTable('genders').notNullable();
     table.integer('raceId').references('id').inTable('races').notNullable();
-    // statistics
     table.integer('level').notNullable().defaultTo(0);
     table.integer('experience').notNullable().defaultTo(0);
     table.integer('totalExperience').notNullable().defaultTo(0);
-    table.integer('health').notNullable().defaultTo(0);
-    table.integer('strength').notNullable().defaultTo(0);
-    table.integer('defence').notNullable().defaultTo(0);
-    table.integer('wisdom').notNullable().defaultTo(0);
-    table.integer('dexterity').notNullable().defaultTo(0);
-    table.integer('intelligence').notNullable().defaultTo(0);
-    table.integer('accuracy').notNullable().defaultTo(0);
-    table.integer('speed').notNullable().defaultTo(0);
-    table.integer('luck').notNullable().defaultTo(0);
-    // to raise
+    table.jsonb('traits').notNullable().defaultTo('{}');
     table.integer('points').notNullable().defaultTo(0);
     table.specificType('professionIds', 'INT[]').notNullable();
+    table.jsonb('raceKills').notNullable().defaultTo('{}');
   });
 };
 
